@@ -28,12 +28,49 @@ const searchBtn = document.getElementById("search-button");
 const searchInput = document.getElementById("search-input");
 const errorMessage = document.getElementById("error");
 const todaySection = document.getElementById("today");
+const forecastSection = document.getElementById("forecast");
 
 // !TO BE MOVED
 // TASK 1: Query URL for the API (returning saved city).
 //const historyQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${savedCity}&units=metric&appid=${apiKey}`
 
 // **FUNCTIONS**
+// TASK 4: Creates five day forecast.
+function createFiveDayForecast(data) {
+    // Sets the listIndex to -3 (i.e. declares a re-assignable variable called listIndex and sets this equal to -3).
+    let listIndex = -3;
+    // Interates five times (for five day forecast).
+    for (i = 0; i < 5; i++) {
+        // Gets today's date and adds one to it on each iteraion, using Dayjs' add() method.
+        const newDay = today.add(i + 1, 'day');
+        // Formats the new date, using Dayjs' format method.
+        const newDayFormatted = newDay.format("DD/MM/YYYY");
+        // Adds 8 to listIndex on each iteration.
+        listIndex += 8;
+
+        // Extracts data from the returned API data, starting at listIndex 5 (i.e. day 1 at 12.00), then 13 (i.e. day 2 at 12.00) etc.
+        // Gets the day's weather icon.
+        const nextIcon = data.list[listIndex].weather[0].icon;
+        // Gets the day's temperature.
+        const nextTemp = data.list[listIndex].main.temp;
+        // Gets the day's wind speed.
+        const nextWind = data.list[listIndex].wind.speed;
+        // Gets the day's humidity.
+        const nextHumidity = data.list[listIndex].main.humidity;
+
+        // Displays the extracted data:
+        // Sets the text content of the h2 (which is great-grandchild of the section element with id of forecast) to new date.
+        // On first iteration grandchild of second child will be targeted, then third etc.
+        forecastSection.children[i + 1].children[0].children[0].textContent = newDayFormatted;
+        // Sets source of image (also great-grandchild) to the weather icon.
+        forecastSection.children[i + 1].children[0].children[1].setAttribute("src", `https://openweathermap.org/img/wn/${nextIcon}.png`);
+        // Sets text content of p elements (also great-grandchildren) to the temperature, wind and humidity.
+        forecastSection.children[i + 1].children[0].children[2].textContent = "Temp: " + nextTemp + "°C";
+        forecastSection.children[i + 1].children[0].children[3].textContent = "Wind: " + nextWind + "m/s";
+        forecastSection.children[i + 1].children[0].children[4].textContent = "Humidity: " + nextHumidity + "%";
+    }
+}
+
 // TASK 3: Creates today's forecast.
 function createTodaysForecast(data) {
     // Formats today's date, using Dayjs' format method.
@@ -60,8 +97,11 @@ function createTodaysForecast(data) {
     todaySection.children[3].textContent = "Wind: " + wind + "m/s";
     todaySection.children[4].textContent = "Humidity: " + humidity + "%";
 
-    // Saves the city's name to the broswer, setting the key name and the value to the city's name.
+    // Saves the city's name to the browser, setting the key name and the value to the city's name.
     localStorage.setItem(`${city}`, JSON.stringify(city));
+
+    // Calls the function to display five day forecast
+    createFiveDayForecast(data);
 }
 
 // **EVENT LISTENERS**
