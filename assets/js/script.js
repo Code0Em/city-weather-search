@@ -53,6 +53,24 @@ function collectBtns() {
     }
 }
 
+// TASK 6: Creates search history buttons.
+function createBtn(city) {
+    // Checks if array (i.e. inner HTML of search history buttons) includes user's input city (i.e. if this city already has a button, run this codeblock).
+    if (btnsText.includes(city)) {
+        // Gets us out of the function (i.e. returns nothing).
+        return
+    } else {
+        // Creates a new button.
+        const newBtn = document.createElement("button");
+        // Sets the text of the button to the city.
+        newBtn.textContent = city;
+        // Adds classes to button (for Bootstrap styling and for event listener).
+        newBtn.classList.add("btn", "btn-light", "cities");
+        // Prepends button to section element with id of history.
+        searchHistory.append(newBtn);
+    }
+}
+
 // TASK 4: Creates five day forecast.
 function createFiveDayForecast(data) {
     // Sets the listIndex to -3 (i.e. declares a re-assignable variable called listIndex and sets this equal to -3).
@@ -122,6 +140,8 @@ function createTodaysForecast(data) {
     createFiveDayForecast(data);
     // Calls function to "collect" search history buttons' inner HTML.
     collectBtns();
+    // Calls function to create search history buttons.
+    createBtn(city);
 }
 
 // **EVENT LISTENERS**
