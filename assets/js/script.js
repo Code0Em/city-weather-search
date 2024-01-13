@@ -14,3 +14,15 @@
 // TASK 6: Create a function which retrieves the city’s name from the browser and “fetches” the city’s data from the API (i.e. so that the data is up to date), when the user selects the city’s search history button.
 
 // TASK 7: Create a function which clears any stored city names from the browser and removes any search history buttons from the page, when the user selects the clear button.
+
+// **GLOBAL VARIABLES**
+
+// TASK 1: Api Key
+const apiKey = "0da7a739bbb63431efc4b479cf47b78e";
+
+// !TO BE MOVED
+// TASK 1: Query URL for the API (returning user's input)
+const userQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${userSearch}&units=metric&appid=${apiKey}`
+
+// TASK 1: Query URL for the API (returning saved city)
+const historyQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${savedCity}&units=metric&appid=${apiKey}`
