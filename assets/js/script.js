@@ -66,7 +66,7 @@ function createBtn(city) {
         newBtn.textContent = city;
         // Adds classes to button (for Bootstrap styling and for event listener).
         newBtn.classList.add("btn", "btn-light", "cities");
-        // Prepends button to section element with id of history.
+        // Appends button to section element with id of history.
         searchHistory.append(newBtn);
     }
 }
@@ -165,7 +165,7 @@ searchBtn.addEventListener("click", function (e) {
 
         // TASK 9: Query URL for Geocoding API, set to return data on user's input city.
         // Gets the city's geographical coordinates for 5 Day Forecast API.
-        const userQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${userSearch}&appid=${apiKey}`;
+        const userQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${userSearch}&limit=1&appid=${apiKey}`;
         // Runs the fetch method on the API query URL.
         fetch(userQueryUrl)
             // Waits for the data to be returned (and then runs codeblock).
@@ -175,12 +175,51 @@ searchBtn.addEventListener("click", function (e) {
             })
             // Waits for the data to be formatted (and then runs codeblock).
             .then(function (data) {
-
                 // TASK 1: Query URL for the API, , set to return data on user's input city (using geo coordinates).
                 const userCoordsQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${data[0].lat}&lon=${data[0].lon}&units=metric&appid=${apiKey}`
 
                 // Runs fetch on the API query URL.
                 fetch(userCoordsQueryUrl)
+                    // Waits (and then runs codeblock).
+                    .then(function (response) {
+                        // Formats the returned data.
+                        return response.json();
+                    })
+                    // Waits (and then runs codeblock).
+                    .then(function (data) {
+                        // Calls the function to display today's forecast.
+                        createTodaysForecast(data);
+                    });
+            });
+    }
+});
+
+// TASK 7: Listens for a click event on the search history buttons (using event delegation) and calls function.
+searchHistory.addEventListener("click", function (e) {
+    // Checks if the element that's been clicked on has class of cities (i.e. if it's a search history button, run this codeblock).
+    if (e.target.matches(".cities")) {
+        // Declares city variable and sets this equal to inner HTML of the button (so that this can be passed as key name).
+        const city = e.target.innerHTML;
+        // Gets the city from the browser (as per project brief).
+        const savedCity = JSON.parse(localStorage.getItem(`${city}`));
+
+        // TASK 9: Query URL for Geocoding API, set to return data on saved city.
+        // Gets the city's geographical coordinates for 5 Day Forecast API.
+        const historyQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${savedCity}&appid=${apiKey}`;
+        // Runs the fetch method on the API query URL.
+        fetch(historyQueryUrl)
+            // Waits for the data to be returned (and then runs codeblock).
+            .then(function (response) {
+                // Formats the returned data into a usable form, using json method.
+                return response.json();
+            })
+            // Waits for the data to be formatted (and then runs codeblock).
+            .then(function (data) {
+                // TASK 1: Query URL for the API, , set to return data on saved city (using geo coordinates).
+                const historyCoordsQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${data[0].lat}&lon=${data[0].lon}&units=metric&appid=${apiKey}`
+
+                // Runs fetch on the API query URL.
+                fetch(historyCoordsQueryUrl)
                     // Waits (and then runs codeblock).
                     .then(function (response) {
                         // Formats the returned data.
