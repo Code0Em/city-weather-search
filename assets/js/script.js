@@ -11,9 +11,11 @@
 
 // TASK 6: Create a function which creates a new search history button, if there is not one already created for the city.
 
-// TASK 6: Create a function which retrieves the city’s name from the browser and “fetches” the city’s data from the API (i.e. so that the data is up to date), when the user selects the city’s search history button.
+// TASK 7: Create a function which retrieves the city’s name from the browser and “fetches” the city’s data from the API (i.e. so that the data is up to date), when the user selects the city’s search history button.
 
-// TASK 7: Create a function which clears any stored city names from the browser and removes any search history buttons from the page, when the user selects the clear button.
+// TASK 8: Create a function which clears any stored city names from the browser and removes any search history buttons from the page, when the user selects the clear button.
+
+// TASK 9: Construct API url to call Geocoding API, “fetch” and extract the city’s geographical coordinates from this API. Use the extracted geographical coordinates to reconstruct API url from TASK 1 (i.e. to call 5 Day Forecast API); embed within existing functions.
 
 // **GLOBAL VARIABLES**
 
@@ -23,18 +25,34 @@ const apiKey = "0da7a739bbb63431efc4b479cf47b78e";
 // Gets today's date, using Dayjs.
 const today = dayjs();
 
+// Empty array to "collect" inner HTML of search history buttons.
+const btnsText = [];
+
 // Gets references for all of the HTML elements that we need.
 const searchBtn = document.getElementById("search-button");
 const searchInput = document.getElementById("search-input");
 const errorMessage = document.getElementById("error");
 const todaySection = document.getElementById("today");
 const forecastSection = document.getElementById("forecast");
+const searchHistory = document.getElementById("history");
+const searchHistoryBtns = searchHistory.children;
 
 // !TO BE MOVED
 // TASK 1: Query URL for the API (returning saved city).
 //const historyQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${savedCity}&units=metric&appid=${apiKey}`
 
 // **FUNCTIONS**
+// TASK 5: "Collects" inner HTML of search history buttons.
+function collectBtns() {
+    // Loops through each search history button.
+    for (let i = 0; i < searchHistoryBtns.length; i++) {
+        // Gets the inner HTML for each button.
+        const innerHTML = searchHistoryBtns[i].innerHTML;
+        // Pushes the inner HTML up to array.
+        btnsText.push(innerHTML)
+    }
+}
+
 // TASK 4: Creates five day forecast.
 function createFiveDayForecast(data) {
     // Sets the listIndex to -3 (i.e. declares a re-assignable variable called listIndex and sets this equal to -3).
@@ -102,6 +120,8 @@ function createTodaysForecast(data) {
 
     // Calls the function to display five day forecast
     createFiveDayForecast(data);
+    // Calls function to "collect" search history buttons' inner HTML.
+    collectBtns();
 }
 
 // **EVENT LISTENERS**
@@ -121,20 +141,36 @@ searchBtn.addEventListener("click", function (e) {
         if (errorMessage.innerHTML.length !== 0) {
             // Removes the existing error message (i.e. sets inner HTML of p to empty string).
             errorMessage.innerHTML = " ";
-        } // Continues through the function
+        } // Continues through the function.
 
-        // TASK 1: Query URL for the API (returning user's input).
-        const userQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${userSearch}&units=metric&appid=${apiKey}`
+        // TASK 9: Query URL for Geocoding API, set to return data on user's input city.
+        // Gets the city's geographical coordinates for 5 Day Forecast API.
+        const userQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${userSearch}&appid=${apiKey}`;
         // Runs the fetch method on the API query URL.
         fetch(userQueryUrl)
+            // Waits for the data to be returned (and then runs codeblock).
             .then(function (response) {
                 // Formats the returned data into a usable form, using json method.
                 return response.json();
             })
-            // Waits for the data to be formatted.
+            // Waits for the data to be formatted (and then runs codeblock).
             .then(function (data) {
-                // Calls the function to display today's forecast.
-                createTodaysForecast(data);
+
+                // TASK 1: Query URL for the API, , set to return data on user's input city (using geo coordinates).
+                const userCoordsQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${data[0].lat}&lon=${data[0].lon}&units=metric&appid=${apiKey}`
+
+                // Runs fetch on the API query URL.
+                fetch(userCoordsQueryUrl)
+                    // Waits (and then runs codeblock).
+                    .then(function (response) {
+                        // Formats the returned data.
+                        return response.json();
+                    })
+                    // Waits (and then runs codeblock).
+                    .then(function (data) {
+                        // Calls the function to display today's forecast.
+                        createTodaysForecast(data);
+                    });
             });
     }
 });
