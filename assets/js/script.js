@@ -20,14 +20,49 @@
 // TASK 1: Api Key.
 const apiKey = "0da7a739bbb63431efc4b479cf47b78e";
 
+// Gets today's date, using Dayjs.
+const today = dayjs();
+
 // Gets references for all of the HTML elements that we need.
 const searchBtn = document.getElementById("search-button");
 const searchInput = document.getElementById("search-input");
 const errorMessage = document.getElementById("error");
+const todaySection = document.getElementById("today");
 
 // !TO BE MOVED
 // TASK 1: Query URL for the API (returning saved city).
-const historyQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${savedCity}&units=metric&appid=${apiKey}`
+//const historyQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${savedCity}&units=metric&appid=${apiKey}`
+
+// **FUNCTIONS**
+// TASK 3: Creates today's forecast.
+function createTodaysForecast(data) {
+    // Formats today's date, using Dayjs' format method.
+    const todayFormatted = today.format("DD/MM/YYYY");
+    // Extracts data from the returned API data:
+    // Gets the city's name.
+    const city = data.city.name;
+    // Gets today's weather icon.
+    const icon = data.list[0].weather[0].icon;
+    // Gets today's temperature.
+    const temp = data.list[0].main.temp;
+    // Gets today's wind speed.
+    const wind = data.list[0].wind.speed;
+    // Gets today's humidity.
+    const humidity = data.list[0].main.humidity;
+
+    // Displays the extracted data:
+    // Sets the text content of the h1 (child of the section element with id of today) to the city's name.
+    todaySection.children[0].textContent = city + " (" + todayFormatted + ")";
+    // Sets source of image (also child of section) to the weather icon.
+    todaySection.children[1].setAttribute("src", `https://openweathermap.org/img/wn/${icon}.png`);
+    // Sets text content of p elements (children of section) to the temperature, wind and humidity.
+    todaySection.children[2].textContent = "Temp: " + temp + "°C";
+    todaySection.children[3].textContent = "Wind: " + wind + "m/s";
+    todaySection.children[4].textContent = "Humidity: " + humidity + "%";
+
+    // Saves the city's name to the broswer, setting the key name and the value to the city's name.
+    localStorage.setItem(`${city}`, JSON.stringify(city));
+}
 
 // **EVENT LISTENERS**
 // TASK 2: Listens for a click event on the search button and calls function.
