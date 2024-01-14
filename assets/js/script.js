@@ -40,6 +40,7 @@ const clearBtn = document.getElementById("clear");
 
 // **FUNCTIONS**
 // TASK 5: "Collects" inner HTML of search history buttons.
+// *CREDIT: Function adapted from Xpert Learning Assistant’s (2024) answer to “how to check the text content of all child elements”.
 function collectBtns() {
     // Loops through each search history button.
     for (let i = 0; i < searchHistoryBtns.length; i++) {
@@ -242,3 +243,12 @@ clearBtn.addEventListener("click", function () {
     // Appends clear button (i.e. adds this back).
     searchHistory.appendChild(clearBtn);
 });
+
+//**CREDITS**
+// The following sources built upon the developer’s existing knowledge of the methods etc used throughout the build:
+
+// MDN Web Docs (2023) The Thematic Break (Horizontal Rule) Element (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hr).
+
+// W3Schools (no date) JavaScript Promises (https://www.w3schools.com/js/js_promise.asp).
+
+// Xpert Learning Assistant (2024) (accessed via Virtual Learning Environment).
