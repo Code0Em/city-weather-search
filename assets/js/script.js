@@ -63,7 +63,7 @@ function createBtn(city) {
         newBtn.textContent = city;
         // Adds classes to button (for Bootstrap styling and for event listener).
         newBtn.classList.add("btn", "btn-light", "cities");
-        // Prepends button to section element with id of history.
+        // Appends button to section element with id of history.
         searchHistory.append(newBtn);
     }
 }
@@ -186,7 +186,6 @@ searchBtn.addEventListener("click", function (e) {
                     })
                     // Waits (and then runs codeblock).
                     .then(function (data) {
-                        console.log(data)
                         // Calls the function to display today's forecast.
                         createTodaysForecast(data);
                     });
@@ -242,4 +241,4 @@ clearBtn.addEventListener("click", function () {
     searchHistory.innerHTML = '';
     // Appends clear button (i.e. adds this back).
     searchHistory.appendChild(clearBtn);
-  });
+});
