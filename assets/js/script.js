@@ -240,7 +240,6 @@ clearBtn.addEventListener("click", function () {
     localStorage.clear();
     // "Empties" btnText array (so that future cities will be saved again).
     btnsText = [];
-    console.log(btnsText);
     // Removes all search history buttons (inc clear button) (by setting the inner HTML of search history section to an empty string).
     searchHistory.innerHTML = '';
     // Appends clear button (i.e. adds this back).
