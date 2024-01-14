@@ -26,7 +26,7 @@ const apiKey = "0da7a739bbb63431efc4b479cf47b78e";
 const today = dayjs();
 
 // Empty array to "collect" inner HTML of search history buttons.
-const btnsText = [];
+let btnsText = [];
 
 // Gets references for all of the HTML elements that we need.
 const searchBtn = document.getElementById("search-button");
@@ -47,7 +47,7 @@ function collectBtns() {
         // Gets the inner HTML for each button.
         const innerHTML = searchHistoryBtns[i].innerHTML;
         // Pushes the inner HTML up to array.
-        btnsText.push(innerHTML)
+        btnsText.push(innerHTML);
     }
 }
 
@@ -238,6 +238,9 @@ searchHistory.addEventListener("click", function (e) {
 clearBtn.addEventListener("click", function () {
     // Clears any saved cities from the browser, using clear method.
     localStorage.clear();
+    // "Empties" btnText array (so that future cities will be saved again).
+    btnsText = [];
+    console.log(btnsText);
     // Removes all search history buttons (inc clear button) (by setting the inner HTML of search history section to an empty string).
     searchHistory.innerHTML = '';
     // Appends clear button (i.e. adds this back).
