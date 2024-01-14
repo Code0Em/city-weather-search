@@ -36,7 +36,7 @@ N/A
 
 ## Usage
 
-Users navigate to the webpage via the URL ([City Weather Search](ADD LINK WHEN DEPLOYED). When on the page, the header displays the application’s title and an aside section includes a search input, a search button and a clear button. Until the user searches for a city, the centre of the page contains a heading (for the five day forecast) and six empty cards.
+Users navigate to the webpage via the URL ([City Weather Search](https://code0em.github.io/city-weather-search/)). When on the page, the header displays the application’s title and an aside section includes a search input, a search button and a clear button. Until the user searches for a city, the centre of the page contains a heading (for the five day forecast) and six empty cards.
 
 If the user selects the search button without entering text in the search input, an error message of “Please enter a city” is displayed below the search input.
 
