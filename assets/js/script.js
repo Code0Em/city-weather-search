@@ -165,7 +165,7 @@ searchBtn.addEventListener("click", function (e) {
 
         // TASK 8: Query URL for Geocoding API, set to return data on user's input city.
         // Gets the city's geographical coordinates for 5 Day Forecast API.
-        const userQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${userSearch}&limit=1&appid=${apiKey}`;
+        const userQueryUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${userSearch}&limit=1&appid=${apiKey}`;
         // Runs the fetch method on the API query URL.
         fetch(userQueryUrl)
             // Waits for the data to be returned (and then runs codeblock).
@@ -205,7 +205,7 @@ searchHistory.addEventListener("click", function (e) {
 
         // TASK 8: Query URL for Geocoding API, set to return data on saved city.
         // Gets the city's geographical coordinates for 5 Day Forecast API.
-        const historyQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${savedCity}&appid=${apiKey}`;
+        const historyQueryUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${savedCity}&appid=${apiKey}`;
         // Runs the fetch method on the API query URL.
         fetch(historyQueryUrl)
             // Waits for the data to be returned (and then runs codeblock).
