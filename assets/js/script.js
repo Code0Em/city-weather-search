@@ -13,12 +13,12 @@
 
 // TASK 7: Create a function which retrieves the city’s name from the browser and “fetches” the city’s data from the API (i.e. so that the data is up to date), when the user selects the city’s search history button.
 
-// TASK 8: Create a function which clears any stored city names from the browser and removes any search history buttons from the page, when the user selects the clear button.
+// TASK 8: Construct API url to call Geocoding API, “fetch” and extract the city’s geographical coordinates from this API. Use the extracted geographical coordinates to reconstruct API url from TASK 1 (i.e. to call 5 Day Forecast API); embed within existing functions.
 
-// TASK 9: Construct API url to call Geocoding API, “fetch” and extract the city’s geographical coordinates from this API. Use the extracted geographical coordinates to reconstruct API url from TASK 1 (i.e. to call 5 Day Forecast API); embed within existing functions.
+// TASK 9: Create a function which clears any stored city names from the browser and removes any search history buttons from the page, when the user selects the clear button.
+
 
 // **GLOBAL VARIABLES**
-
 // TASK 1: Api Key.
 const apiKey = "0da7a739bbb63431efc4b479cf47b78e";
 
@@ -36,10 +36,7 @@ const todaySection = document.getElementById("today");
 const forecastSection = document.getElementById("forecast");
 const searchHistory = document.getElementById("history");
 const searchHistoryBtns = searchHistory.children;
-
-// !TO BE MOVED
-// TASK 1: Query URL for the API (returning saved city).
-//const historyQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${savedCity}&units=metric&appid=${apiKey}`
+const clearBtn = document.getElementById("clear");
 
 // **FUNCTIONS**
 // TASK 5: "Collects" inner HTML of search history buttons.
@@ -66,15 +63,15 @@ function createBtn(city) {
         newBtn.textContent = city;
         // Adds classes to button (for Bootstrap styling and for event listener).
         newBtn.classList.add("btn", "btn-light", "cities");
-        // Appends button to section element with id of history.
+        // Prepends button to section element with id of history.
         searchHistory.append(newBtn);
     }
 }
 
 // TASK 4: Creates five day forecast.
 function createFiveDayForecast(data) {
-    // Sets the listIndex to -3 (i.e. declares a re-assignable variable called listIndex and sets this equal to -3).
-    let listIndex = -3;
+    // Sets the listIndex to -1 (i.e. declares a re-assignable variable called listIndex and sets this equal to -1).
+    let listIndex = -1;
     // Interates five times (for five day forecast).
     for (i = 0; i < 5; i++) {
         // Gets today's date and adds one to it on each iteraion, using Dayjs' add() method.
@@ -84,7 +81,7 @@ function createFiveDayForecast(data) {
         // Adds 8 to listIndex on each iteration.
         listIndex += 8;
 
-        // Extracts data from the returned API data, starting at listIndex 5 (i.e. day 1 at 12.00), then 13 (i.e. day 2 at 12.00) etc.
+        // Extracts data from the returned API data, starting at listIndex 7 (e.g. day 1 at 12.00), then 14 (e.g. day 2 at 12.00) etc (i.e. times will differ depending on when API is called, but same time on each day will be displayed).
         // Gets the day's weather icon.
         const nextIcon = data.list[listIndex].weather[0].icon;
         // Gets the day's temperature.
@@ -114,6 +111,8 @@ function createTodaysForecast(data) {
     // Extracts data from the returned API data:
     // Gets the city's name.
     const city = data.city.name;
+    // Gets the city's country.
+    const country = data.city.country;
     // Gets today's weather icon.
     const icon = data.list[0].weather[0].icon;
     // Gets today's temperature.
@@ -124,8 +123,8 @@ function createTodaysForecast(data) {
     const humidity = data.list[0].main.humidity;
 
     // Displays the extracted data:
-    // Sets the text content of the h1 (child of the section element with id of today) to the city's name.
-    todaySection.children[0].textContent = city + " (" + todayFormatted + ")";
+    // Sets the text content of the h1 (child of the section element with id of today) to the city's name, country code and today's date.
+    todaySection.children[0].textContent = city + ", " + country + " (" + todayFormatted + ")";
     // Sets source of image (also child of section) to the weather icon.
     todaySection.children[1].setAttribute("src", `https://openweathermap.org/img/wn/${icon}.png`);
     // Sets text content of p elements (children of section) to the temperature, wind and humidity.
@@ -163,7 +162,7 @@ searchBtn.addEventListener("click", function (e) {
             errorMessage.innerHTML = " ";
         } // Continues through the function.
 
-        // TASK 9: Query URL for Geocoding API, set to return data on user's input city.
+        // TASK 8: Query URL for Geocoding API, set to return data on user's input city.
         // Gets the city's geographical coordinates for 5 Day Forecast API.
         const userQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${userSearch}&limit=1&appid=${apiKey}`;
         // Runs the fetch method on the API query URL.
@@ -187,6 +186,7 @@ searchBtn.addEventListener("click", function (e) {
                     })
                     // Waits (and then runs codeblock).
                     .then(function (data) {
+                        console.log(data)
                         // Calls the function to display today's forecast.
                         createTodaysForecast(data);
                     });
@@ -203,7 +203,7 @@ searchHistory.addEventListener("click", function (e) {
         // Gets the city from the browser (as per project brief).
         const savedCity = JSON.parse(localStorage.getItem(`${city}`));
 
-        // TASK 9: Query URL for Geocoding API, set to return data on saved city.
+        // TASK 8: Query URL for Geocoding API, set to return data on saved city.
         // Gets the city's geographical coordinates for 5 Day Forecast API.
         const historyQueryUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${savedCity}&appid=${apiKey}`;
         // Runs the fetch method on the API query URL.
@@ -233,3 +233,13 @@ searchHistory.addEventListener("click", function (e) {
             });
     }
 });
+
+// TASK 9: Listens for a click event on the clear history button and calls function.
+clearBtn.addEventListener("click", function () {
+    // Clears any saved cities from the browser, using clear method.
+    localStorage.clear();
+    // Removes all search history buttons (inc clear button) (by setting the inner HTML of search history section to an empty string).
+    searchHistory.innerHTML = '';
+    // Appends clear button (i.e. adds this back).
+    searchHistory.appendChild(clearBtn);
+  });
