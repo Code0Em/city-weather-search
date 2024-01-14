@@ -1,1 +1,14 @@
 /* Comments added to explain updates made to starter code. */
+
+/* Added top margin to all buttons (sets spacing between them). */
+button {
+    margin-top: 2%;
+}
+
+/* Added styling for error message (displayed when no text is entered into input field). */
+#error {
+    /*Sets font weight, size and colour*/
+    font-weight: bolder;
+    font-size: 120%;
+    color: gray;
+}
